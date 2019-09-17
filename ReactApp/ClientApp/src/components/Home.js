@@ -8,7 +8,8 @@ export class Home extends Component {
         this.state = {
             inputQuery: '',
             inputUrl: '',
-            inputCountryDomain: 'co.uk'
+            inputCountryDomain: 'co.uk',
+            items: []
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -25,18 +26,29 @@ export class Home extends Component {
         });
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
         event.preventDefault();
 
         var params = [this.state.inputQuery, this.state.inputUrl, this.state.inputCountryDomain];
         var esc = encodeURIComponent;
+        let positionFetched = '';
 
-        fetch('https://localhost:5001/api/google/' + params.map(k => esc(k) + "/").join(''))
-            .then(response => response.json())
-            .then(data => {
-                this.setState({ forecasts: data, loading: false });
-            });
 
+        //API request
+        const response = await fetch('https://localhost:5001/api/google/' + params.map(k => esc(k) + "/").join(''))
+        const data = await response.json();
+        positionFetched = data[0];
+
+        let items = [...this.state.items];
+
+        items.push({ inputQuery: this.state.inputQuery, inputUrl: this.state.inputUrl, inputCountryDomain: this.state.inputCountryDomain, positions: positionFetched });
+
+        this.setState({
+            inputQuery: '',
+            inputUrl: '',
+            inputCountryDomain: 'co.uk',
+            items
+        });
 
     }
 
@@ -78,6 +90,16 @@ export class Home extends Component {
                         </tr>
                     </thead>
                     <tbody>
+                        {this.state.items.map(item => {
+                            return (
+                                <tr>
+                                    <td>{item.inputQuery}</td>
+                                    <td>{item.inputUrl}</td>
+                                    <td>{item.inputCountryDomain}</td>
+                                    <td>{item.positions}</td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>

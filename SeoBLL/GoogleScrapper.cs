@@ -17,11 +17,14 @@ namespace SeoBLL
 
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(html);
+
+            //divs that identify the pages cards
             var selectNodes = doc.DocumentNode.SelectNodes("//div[@class='ZINbbc xpd O9g5cc uUPGi']/div[@class='kCrYT']/a[1]");
             List<int> positions = new List<int>();
 
             for(var i = 0; i < selectNodes.Count; i++)
             {
+                //search for the href attributes and comparing to the given url
                 if (selectNodes[i].GetAttributeValue("href", string.Empty).Contains(url))
                 {
                     positions.Add(i + 1);
