@@ -26,8 +26,10 @@ export class Home extends Component {
     }
 
     handleSubmit() {
+        var params = [this.state.inputQuery, this.state.inputUrl, this.state.inputCountryDomain];
+        var esc = encodeURIComponent;
 
-        fetch('https://localhost:5001/api/google/')
+        fetch('https://localhost:5001/api/google/' + params.map(k => esc(k) + "/").join(''))
             .then(response => response.json())
             .then(data => {
                 this.setState({ forecasts: data, loading: false });
