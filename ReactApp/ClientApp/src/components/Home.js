@@ -25,7 +25,9 @@ export class Home extends Component {
         });
     }
 
-    handleSubmit() {
+    handleSubmit(event) {
+        event.preventDefault();
+
         var params = [this.state.inputQuery, this.state.inputUrl, this.state.inputCountryDomain];
         var esc = encodeURIComponent;
 
