@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using SeoBLL;
 
 namespace SEO_API.Controllers
 {
     [Route("api/[controller]")]
     public class GoogleController : Controller
     {
-        [HttpGet("{query}/{website}")]
-        public string Get(string query, string website)
+        [HttpGet("{query}/{url}")]
+        public async Task<List<int>> Get(string query, string url)
         {
-            return "value";
+            var results = await GoogleScrapper.GoogleResultsScrapper(query, url, "co.uk", "100");
+            return results;
         }
     }
 }
