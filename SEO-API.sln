@@ -1,13 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29020.237
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SEO-API", "SEO-API\SEO-API.csproj", "{D7C18D9A-50CC-41EA-874A-7AFF793C38E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SEO-API", "SEO-API\SEO-API.csproj", "{D7C18D9A-50CC-41EA-874A-7AFF793C38E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeoBLL", "SeoBLL\SeoBLL.csproj", "{48D5051A-40E8-421E-A38C-C82B23095F90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeoBLL", "SeoBLL\SeoBLL.csproj", "{48D5051A-40E8-421E-A38C-C82B23095F90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactApp", "ReactApp\ReactApp.csproj", "{BF87058F-A7A2-4EEF-A5B7-19D2C55D9E16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactApp", "ReactApp\ReactApp.csproj", "{BF87058F-A7A2-4EEF-A5B7-19D2C55D9E16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5708B98-EC86-4F93-9A49-A9D51D5A74BE}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
