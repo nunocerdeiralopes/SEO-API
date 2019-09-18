@@ -35,9 +35,10 @@ export class Home extends Component {
 
 
         //API request
-        const response = await fetch('https://localhost:5001/api/google/' + params.map(k => esc(k) + "/").join(''))
+        const response = await fetch('https://localhost:44386/api/google/' + params.map(k => esc(k) + "/").join(''))
         const data = await response.json();
-        positionFetched = data[0];
+        positionFetched = '' + data;
+
 
         let items = [...this.state.items];
 

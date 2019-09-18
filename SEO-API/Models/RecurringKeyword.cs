@@ -5,7 +5,8 @@ namespace SEO_API.Models
 {
     public class RecurringKeyword
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RecurringKeyworId { get; set; }
         [Required]
         public string Query { get; set; }
