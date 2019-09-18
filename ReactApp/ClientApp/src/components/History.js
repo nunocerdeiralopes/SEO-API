@@ -77,7 +77,7 @@ export class History extends Component {
                     </div>
                     <div className="form-group row">
                         <div className="col-sm-10">
-                            <button type="submit" className="btn btn-primary">Get Positions</button>
+                            <button type="submit" className="btn btn-primary">Schedule daily check</button>
                         </div>
                     </div>
                 </form>
@@ -87,10 +87,20 @@ export class History extends Component {
                             <th>Query</th>
                             <th>Url</th>
                             <th>Country Domain</th>
-                            <th>Position</th>
+                            <th>Last check</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td>vitoria</td>
+                            <td>vitoriasc.pt</td>
+                            <td>co.uk</td>
+                            <td>2</td>
+                            <td><button type="submit" className="btn btn-sm btn-primary">Weekly Evolution</button> <button type="button" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button></td>
+                        </tr>
                         {this.state.items.map(item => {
                             return (
                                 <tr>
