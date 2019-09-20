@@ -6,10 +6,10 @@ export class History extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            inputQuery: '',
-            inputUrl: '',
-            inputCountryDomain: 'co.uk',
-            items: []
+            inputQuerySchedule: '',
+            inputUrlSchedule: '',
+            inputCountryDomainSchedule: 'co.uk',
+            scheduleItems: []
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -29,35 +29,31 @@ export class History extends Component {
     async handleSubmit(event) {
         event.preventDefault();
 
-        let positionFetched = '';
-
-
         //API request
-        const response = await fetch('https://localhost:44386/api/RecurringKeyword/', {
+        const response = await fetch('https://localhost:5001/api/RecurringKeyword', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                Query: this.state.inputQuery,
-                Url: this.state.inputUrl,
-                CountryDomain: this.state.inputCountryDomain
+                Query: this.state.inputQuerySchedule,
+                Url: this.state.inputUrlSchedule,
+                CountryDomain: this.state.inputCountryDomainSchedule
             })
         })
         const data = await response.json();
-        positionFetched = '' + data;
 
 
-        let items = [...this.state.items];
+        let scheduleItems = [...this.state.scheduleItems];
 
-        items.push({ inputQuery: this.state.inputQuery, inputUrl: this.state.inputUrl, inputCountryDomain: this.state.inputCountryDomain, positions: positionFetched });
+        scheduleItems.push({ inputQuerySchedule: this.state.inputQuerySchedule, inputUrlSchedule: this.state.inputUrlSchedule, inputCountryDomainSchedule: this.state.inputCountryDomainSchedule});
 
         this.setState({
-            inputQuery: '',
-            inputUrl: '',
-            inputCountryDomain: 'co.uk',
-            items
+            inputQuerySchedule: '',
+            inputUrlSchedule: '',
+            inputCountryDomainSchedule: 'co.uk',
+            scheduleItems
         });
 
     }
@@ -68,16 +64,16 @@ export class History extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-row">
                         <div className="form-group col-md-3">
-                            <label htmlFor="inputQueryID">Query</label>
-                            <input type="text" className="form-control" id="inputQueryID" name="inputQuery" value={this.state.inputQuery} onChange={this.handleInputChange} required />
+                            <label htmlFor="inputQueryScheduleID">Query</label>
+                            <input type="text" className="form-control" id="inputQueryScheduleID" name="inputQuerySchedule" value={this.state.inputQuerySchedule} onChange={this.handleInputChange} required />
                         </div>
                         <div className="form-group col-md-5">
-                            <label htmlFor="inputUrlID">Url</label>
-                            <input type="text" className="form-control" id="inputUrlID" name="inputUrl" value={this.state.inputUrl} onChange={this.handleInputChange} required />
+                            <label htmlFor="inputUrlScheduleID">Url</label>
+                            <input type="text" className="form-control" id="inputUrlScheduleID" name="inputUrlSchedule" value={this.state.inputUrlSchedule} onChange={this.handleInputChange} required />
                         </div>
                         <div className="form-group col-md-4">
-                            <label htmlFor="inputCountryDomainID">Country Domain</label>
-                            <select id="inputCountryDomainID" name="inputCountryDomain" value={this.state.inputCountryDomain} className="form-control" onChange={this.handleInputChange} required>
+                            <label htmlFor="inputCountryDomainScheduleID">Country Domain</label>
+                            <select id="inputCountryDomainScheduleID" name="inputCountryDomainSchedule" value={this.state.inputCountryDomainSchedule} className="form-control" onChange={this.handleInputChange} required>
                                 <option value="co.uk">co.uk</option>
                                 <option value="com">com</option>
                                 <option value="co.au">co.au</option>
@@ -110,13 +106,13 @@ export class History extends Component {
                                 <span aria-hidden="true">&times;</span>
                             </button></td>
                         </tr>
-                        {this.state.items.map(item => {
+                        {this.state.scheduleItems.map(item => {
                             return (
                                 <tr>
-                                    <td>{item.inputQuery}</td>
-                                    <td>{item.inputUrl}</td>
-                                    <td>{item.inputCountryDomain}</td>
-                                    <td>{item.positions}</td>
+                                    <td>{item.inputQuerySchedule}</td>
+                                    <td>{item.inputUrlSchedule}</td>
+                                    <td>{item.inputCountryDomainSchedule}</td>
+                                    <td>{item.positionsSchedule}</td>
                                 </tr>
                             );
                         })}

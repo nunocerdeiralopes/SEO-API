@@ -21,7 +21,7 @@ namespace SEO_API.Jobs
             _context = context;
         }
 
-        public async void GoogleScrappingJob(string query, string url, string countryDomain, int recurringKeyworId)
+        public async Task GoogleScrappingJob(string query, string url, string countryDomain, int recurringKeyworId)
         {
             var results = await GoogleScrapper.GoogleResultsScrapper(query, url, countryDomain, "100");
 
