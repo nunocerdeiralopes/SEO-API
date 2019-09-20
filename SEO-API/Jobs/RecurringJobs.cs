@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
+using Microsoft.Extensions.Options;
 using SEO_API.Data;
 using SEO_API.Models;
 using SeoBLL;
@@ -14,16 +12,17 @@ namespace SEO_API.Jobs
     public class RecurringJobs
     {
         private readonly ApplicationDbContext _context;
+        private readonly AppSettings _appSettings;
 
-
-        public RecurringJobs(ApplicationDbContext context)
+        public RecurringJobs(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
+            _appSettings = appSettings.Value;
         }
 
         public async Task GoogleScrappingJob(string query, string url, string countryDomain, int recurringKeyworId)
         {
-            var results = await GoogleScrapper.GoogleResultsScrapper(query, url, countryDomain, "100");
+            var results = await GoogleScrapper.GoogleResultsScrapper(query, url, countryDomain, _appSettings.NumberOfResults);
 
             _context.RecurringKeywordPosition.Add(new RecurringKeywordPosition
                 {

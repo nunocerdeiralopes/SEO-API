@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SEO_API.Data;
+using SEO_API.Models;
 using System;
 
 namespace SEO_API
@@ -23,6 +24,10 @@ namespace SEO_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var appSettings =
+                Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettings);
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
