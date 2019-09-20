@@ -102,7 +102,7 @@ export class History extends Component {
                             <td>vitoriasc.pt</td>
                             <td>co.uk</td>
                             <td>2</td>
-                            <td><button type="submit" className="btn btn-sm btn-primary">Weekly Evolution</button> <button type="button" class="close" aria-label="Close">
+                            <td><button type="submit" className="btn btn-sm btn-primary">Weekly Evolution</button> <button type="button" className="close" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button></td>
                         </tr>

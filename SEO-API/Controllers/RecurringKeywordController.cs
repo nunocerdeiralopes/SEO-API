@@ -83,17 +83,25 @@ namespace SEO_API.Controllers
 
         // POST: api/RecurringKeyword
         [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.Conflict)]
         [HttpPost]
         public async Task<ActionResult<RecurringKeyword>> PostRecurringKeyword(RecurringKeyword recurringKeyword)
         {
-            _context.RecurringKeyword.Add(recurringKeyword);
-            await _context.SaveChangesAsync();
+            if (!NewRecurringKeywordExistsAlready(recurringKeyword))
+            {
+                _context.RecurringKeyword.Add(recurringKeyword);
+                await _context.SaveChangesAsync();
 
-            RecurringJobs scrappingInstance = new RecurringJobs(_context);
-            //cron job running every day at 7 am to get the position for the day
-            RecurringJob.AddOrUpdate(recurringKeyword.RecurringKeyworId.ToString(), () => scrappingInstance.GoogleScrappingJob(recurringKeyword.Query,recurringKeyword.Url,recurringKeyword.CountryDomain, recurringKeyword.RecurringKeyworId), Cron.Daily);
+                RecurringJobs scrappingInstance = new RecurringJobs(_context);
+                //cron job running every day at 7 am to get the position for the day
+                RecurringJob.AddOrUpdate(recurringKeyword.RecurringKeyworId.ToString(), () => scrappingInstance.GoogleScrappingJob(recurringKeyword.Query, recurringKeyword.Url, recurringKeyword.CountryDomain, recurringKeyword.RecurringKeyworId), Cron.Daily);
 
-            return CreatedAtAction("GetRecurringKeyword", new { id = recurringKeyword.RecurringKeyworId }, recurringKeyword);
+                return CreatedAtAction("GetRecurringKeyword", new { id = recurringKeyword.RecurringKeyworId }, recurringKeyword);
+            }
+            else
+            {
+                return Conflict();
+            }
         }
 
         // DELETE: api/RecurringKeyword/5
@@ -108,6 +116,8 @@ namespace SEO_API.Controllers
                 return NotFound();
             }
 
+            RecurringJob.RemoveIfExists(recurringKeyword.RecurringKeyworId.ToString());
+            _context.RecurringKeywordPosition.RemoveRange(_context.RecurringKeywordPosition.Where(x => x.RecurringKeyworId == recurringKeyword.RecurringKeyworId));
             _context.RecurringKeyword.Remove(recurringKeyword);
             await _context.SaveChangesAsync();
 
@@ -117,6 +127,11 @@ namespace SEO_API.Controllers
         private bool RecurringKeywordExists(int id)
         {
             return _context.RecurringKeyword.Any(e => e.RecurringKeyworId == id);
+        }
+
+        private bool NewRecurringKeywordExistsAlready(RecurringKeyword recurringKeyword)
+        {
+            return _context.RecurringKeyword.Any(e => e.Query == recurringKeyword.Query && e.Url == recurringKeyword.Url && e.CountryDomain == recurringKeyword.CountryDomain);
         }
     }
 }
