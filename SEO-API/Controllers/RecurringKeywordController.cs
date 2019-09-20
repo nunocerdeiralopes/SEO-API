@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SEO_API.Data;
+using SEO_API.Helper;
 using SEO_API.Jobs;
 using SEO_API.Models;
 
@@ -84,9 +85,13 @@ namespace SEO_API.Controllers
         // POST: api/RecurringKeyword
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.Conflict)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [HttpPost]
         public async Task<ActionResult<RecurringKeyword>> PostRecurringKeyword(RecurringKeyword recurringKeyword)
         {
+            if (!UrlHelper.isValidUrl(recurringKeyword.Url))
+                return BadRequest();
+
             if (!NewRecurringKeywordExistsAlready(recurringKeyword))
             {
                 _context.RecurringKeyword.Add(recurringKeyword);
@@ -101,9 +106,7 @@ namespace SEO_API.Controllers
                 return CreatedAtAction("GetRecurringKeyword", new { id = recurringKeyword.RecurringKeyworId }, recurringKeyword);
             }
             else
-            {
                 return Conflict();
-            }
         }
 
         // DELETE: api/RecurringKeyword/5
