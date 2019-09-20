@@ -14,6 +14,6 @@ namespace SEO_API.Models
         [Required]
         public string Positions { get; set; }
         [Required]
-        public DateTime date { get; set; }
+        public DateTime Date { get; set; }
     }
 }

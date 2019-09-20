@@ -89,8 +89,9 @@ namespace SEO_API.Controllers
             _context.RecurringKeyword.Add(recurringKeyword);
             await _context.SaveChangesAsync();
 
+            RecurringJobs scrappingInstance = new RecurringJobs(_context);
             //cron job running every day at 7 am to get the position for the day
-            RecurringJob.AddOrUpdate(() => RecurringJobs.GoogleScrappingJob(recurringKeyword.Query,recurringKeyword.Url,recurringKeyword.CountryDomain), "	0 0 7 1/1 * ? *");
+            RecurringJob.AddOrUpdate(() => scrappingInstance.GoogleScrappingJob(recurringKeyword.Query,recurringKeyword.Url,recurringKeyword.CountryDomain, recurringKeyword.RecurringKeyworId), "	0 0 7 1/1 * ? *");
 
             return CreatedAtAction("GetRecurringKeyword", new { id = recurringKeyword.RecurringKeyworId }, recurringKeyword);
         }

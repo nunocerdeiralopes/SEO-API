@@ -18,6 +18,7 @@ namespace SEO_API.Data
 
 
         public DbSet<RecurringKeyword> RecurringKeyword { get; set; }
+        public DbSet<RecurringKeywordPosition> RecurringKeywordPosition { get; set; }
 
     }
 }

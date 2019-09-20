@@ -29,13 +29,22 @@ export class History extends Component {
     async handleSubmit(event) {
         event.preventDefault();
 
-        var params = [this.state.inputQuery, this.state.inputUrl, this.state.inputCountryDomain];
-        var esc = encodeURIComponent;
         let positionFetched = '';
 
 
         //API request
-        const response = await fetch('https://localhost:44386/api/google/' + params.map(k => esc(k) + "/").join(''))
+        const response = await fetch('https://localhost:44386/api/RecurringKeyword/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                Query: this.state.inputQuery,
+                Url: this.state.inputUrl,
+                CountryDomain: this.state.inputCountryDomain
+            })
+        })
         const data = await response.json();
         positionFetched = '' + data;
 
