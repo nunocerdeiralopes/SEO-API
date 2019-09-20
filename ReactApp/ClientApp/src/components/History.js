@@ -9,11 +9,25 @@ export class History extends Component {
             inputQuerySchedule: '',
             inputUrlSchedule: '',
             inputCountryDomainSchedule: 'co.uk',
+            loading: true,
             scheduleItems: []
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.fetchRecurringKeywords = this.fetchRecurringKeywords.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.renderScheduleTable = this.renderScheduleTable.bind(this);
+
+        this.fetchRecurringKeywords();
+    }
+
+    async fetchRecurringKeywords() {
+        await fetch('https://localhost:5001/api/RecurringKeyword')
+            .then(response => response.json())
+            .then(data => {
+                this.setState({ scheduleItems: data, loading: false });
+            });
     }
 
     handleInputChange(event) {
@@ -24,6 +38,20 @@ export class History extends Component {
         this.setState({
             [name]: value
         });
+    }
+
+    async handleDelete(e) {
+        e.preventDefault();
+        const response = await fetch('https://localhost:5001/api/RecurringKeyword/' + e.currentTarget.id, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        });
+
+        this.setState({ loading: true });
+        this.fetchRecurringKeywords();
     }
 
     async handleSubmit(event) {
@@ -41,13 +69,14 @@ export class History extends Component {
                 Url: this.state.inputUrlSchedule,
                 CountryDomain: this.state.inputCountryDomainSchedule
             })
-        })
+        });
+
         const data = await response.json();
 
 
         let scheduleItems = [...this.state.scheduleItems];
 
-        scheduleItems.push({ inputQuerySchedule: this.state.inputQuerySchedule, inputUrlSchedule: this.state.inputUrlSchedule, inputCountryDomainSchedule: this.state.inputCountryDomainSchedule});
+        scheduleItems.push({ inputQuerySchedule: this.state.inputQuerySchedule, inputUrlSchedule: this.state.inputUrlSchedule, inputCountryDomainSchedule: this.state.inputCountryDomainSchedule });
 
         this.setState({
             inputQuerySchedule: '',
@@ -58,7 +87,43 @@ export class History extends Component {
 
     }
 
+
+    renderScheduleTable(scheduleItems) {
+        return (
+            <table className='table table-striped'>
+                <thead>
+                    <tr>
+                        <th>Query</th>
+                        <th>Url</th>
+                        <th>Country Domain</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {scheduleItems.map(item => {
+                        return (
+                            <tr key={item.recurringKeyworId}>
+                                <td>{item.query}</td>
+                                <td>{item.url}</td>
+                                <td>{item.countryDomain}</td>
+                                <td><button type="submit" className="btn btn-sm btn-primary">Weekly Evolution</button>
+                                    <button id={item.recurringKeyworId} type="button" className="close" aria-label="Close" onClick={(e) => this.handleDelete(e, item.recurringKeyworId)}>
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        )
+    }
+
     render() {
+        let contents = this.state.loading
+            ? <p><em>Loading...</em></p>
+            : this.renderScheduleTable(this.state.scheduleItems);
+
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
@@ -86,38 +151,7 @@ export class History extends Component {
                         </div>
                     </div>
                 </form>
-                <table className='table table-striped'>
-                    <thead>
-                        <tr>
-                            <th>Query</th>
-                            <th>Url</th>
-                            <th>Country Domain</th>
-                            <th>Last check</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>vitoria</td>
-                            <td>vitoriasc.pt</td>
-                            <td>co.uk</td>
-                            <td>2</td>
-                            <td><button type="submit" className="btn btn-sm btn-primary">Weekly Evolution</button> <button type="button" className="close" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button></td>
-                        </tr>
-                        {this.state.scheduleItems.map(item => {
-                            return (
-                                <tr>
-                                    <td>{item.inputQuerySchedule}</td>
-                                    <td>{item.inputUrlSchedule}</td>
-                                    <td>{item.inputCountryDomainSchedule}</td>
-                                    <td>{item.positionsSchedule}</td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                {contents}
             </div>
         );
     }
