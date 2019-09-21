@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import LineChart from './Graph';
 
 export class History extends Component {
     static displayName = History.name;
@@ -152,6 +153,7 @@ export class History extends Component {
                     </div>
                 </form>
                 {contents}
+                <LineChart />
             </div>
         );
     }

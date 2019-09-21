@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SEO_API.Data;
 using SEO_API.Helper;
 using SEO_API.Jobs;
@@ -17,10 +18,12 @@ namespace SEO_API.Controllers
     public class RecurringKeywordController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IOptions<AppSettings> options;
 
-        public RecurringKeywordController(ApplicationDbContext context)
+        public RecurringKeywordController(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
+            options = appSettings;
         }
 
         // GET: api/RecurringKeyword
@@ -95,7 +98,7 @@ namespace SEO_API.Controllers
                 _context.RecurringKeyword.Add(recurringKeyword);
                 await _context.SaveChangesAsync();
 
-                RecurringJobs scrappingInstance = new RecurringJobs(_context);
+                RecurringJobs scrappingInstance = new RecurringJobs(_context, options);
                 //cron job running every day at 7 am to get the position for the day
                 RecurringJob.AddOrUpdate("RecurringKeyword-" + recurringKeyword.RecurringKeyworId, 
                                         () => scrappingInstance.GoogleScrappingJob(recurringKeyword.Query, recurringKeyword.Url, recurringKeyword.CountryDomain, recurringKeyword.RecurringKeyworId), 
