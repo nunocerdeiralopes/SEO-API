@@ -55,6 +55,7 @@ export class Schedule extends Component {
                 'Content-Type': 'application/json',
             }
         })
+            .then(response => response.json())
             .then(dataFetched => {
                 this.setState({
                     showAlert: true,
@@ -108,14 +109,40 @@ export class Schedule extends Component {
                 CountryDomain: this.state.inputCountryDomainSchedule
             })
         })
-            .then(dataFetched => {
-                this.setState({
-                    showAlert: true,
-                    alert: {
-                        message: "Keyword added.",
-                        type: "success",
-                    }
-                });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+                return response;
+            })
+            .then(response => {
+                if (response.status !== 409) {
+                    this.setState({
+                        showAlert: true,
+                        alert: {
+                            message: "Keyword added.",
+                            type: "success",
+                        }
+                    });
+
+                    this.setState({
+                        inputQuerySchedule: '',
+                        inputUrlSchedule: '',
+                        inputCountryDomainSchedule: 'co.uk'
+                    });
+
+                    this.fetchRecurringKeywords();
+                }
+                else {
+                    this.setState({
+                        showAlert: true,
+                        alert: {
+                            message: "This query is already scheduled.",
+                            type: "warning",
+                        }
+                    });
+                }
+                
             })
             .catch(error => {
                 console.log(error);
@@ -127,21 +154,6 @@ export class Schedule extends Component {
                     }
                 });
             });
-
-        const data = await response.json();
-
-
-        let scheduleItems = [...this.state.scheduleItems];
-
-        scheduleItems.push({ inputQuerySchedule: this.state.inputQuerySchedule, inputUrlSchedule: this.state.inputUrlSchedule, inputCountryDomainSchedule: this.state.inputCountryDomainSchedule });
-
-        this.setState({
-            inputQuerySchedule: '',
-            inputUrlSchedule: '',
-            inputCountryDomainSchedule: 'co.uk',
-            scheduleItems
-        });
-
     }
 
 
