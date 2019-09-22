@@ -9,6 +9,14 @@ namespace SeoBLL
 {
     public static class GoogleScrapper
     {
+        /// <summary>
+        /// Returns the google ranking for the given query, url in the chosen google domain.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="url"></param>
+        /// <param name="countryCodeDomain"></param>
+        /// <param name="searchsNumer"></param>
+        /// <returns></returns>
         public static async Task<List<int>> GoogleResultsScrapper(string query, string url, string countryCodeDomain, string searchsNumer)
         {
             string formatedUrl = string.Format("https://www.google.{0}/search?num={1}&q={2}", countryCodeDomain, searchsNumer, query);
