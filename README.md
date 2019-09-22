@@ -10,5 +10,5 @@ A simple app built with .NET Core and React to check the position of an Url for 
 
 ## Images
 
-![Main page used to get the rankings](main_page.png)
+![Main page used to get the rankings](main.png)
 ![Page used to schedule a rank checker](schedule.png)
