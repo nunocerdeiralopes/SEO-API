@@ -1,7 +1,7 @@
 ﻿# SEO App
 
 
-A simple app built with .NET Core and React to check the position of an Url for a given keywork in Google.
+A simple app built with .NET Core, React, HangFire, Highcharts and SQL Server to check the position of an Url for a given keywork in Google. You can also schedule a daily check for a given keyword, which can be visualized graphically.
 
 ## Prerequisites
 
