@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace SEO_API.Helper
@@ -8,9 +9,9 @@ namespace SEO_API.Helper
         static string[] countryCodes = { "co.uk", "com.au", "com" };
         public static bool isValidUrl(string url)
         {
-            Regex regex = new Regex(@"^(https?:\/\/)?(www\.)?([a-zA-Z0-9]+(-?[a-zA-Z0-9])*\.)+[\w]{2,}(\/\S*)?$",
+            Regex regex = new Regex(@"^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$",
                                     RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            return regex.IsMatch(url);
+            return regex.IsMatch(WebUtility.UrlDecode((url)));
         }
 
         public static bool isValidCountryCode(string countryDomain)

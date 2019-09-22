@@ -85,11 +85,11 @@ export class Home extends Component {
                         <input type="text" className="form-control" id="inputUrlID" name="inputUrl" value={this.state.inputUrl} onChange={this.handleInputChange} required />
                     </div>
                     <div className="form-group col-md-4">
-                        <label htmlFor="inputCountryDomainID">Country Domain</label>
+                        <label htmlFor="inputCountryDomainID">Google Domain</label>
                         <select id="inputCountryDomainID" name="inputCountryDomain" value={this.state.inputCountryDomain} className="form-control" onChange={this.handleInputChange} required>
-                            <option value="co.uk">co.uk</option>
-                            <option value="com">com</option>
-                            <option value="co.au">co.au</option>
+                            <option value="co.uk">google.co.uk</option>
+                            <option value="com">google.com</option>
+                            <option value="co.au">google.co.au</option>
                         </select>
                     </div>
                 </div>
@@ -118,7 +118,7 @@ export class Home extends Component {
                         <tr>
                             <th>Query</th>
                             <th>Url</th>
-                            <th>Country Domain</th>
+                            <th>Google Domain</th>
                             <th>Position</th>
                         </tr>
                     </thead>

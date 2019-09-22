@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.421
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SEO-API", "SEO-API\SEO-API.csproj", "{D7C18D9A-50CC-41EA-874A-7AFF793C38E1}"
 EndProject
@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactApp", "ReactApp\ReactA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B5708B98-EC86-4F93-9A49-A9D51D5A74BE}"
 	ProjectSection(SolutionItems) = preProject
+		..\..\..\Desktop\main_page.png = ..\..\..\Desktop\main_page.png
 		README.md = README.md
+		..\..\..\Desktop\schedule.png = ..\..\..\Desktop\schedule.png
 	EndProjectSection
 EndProject
 Global

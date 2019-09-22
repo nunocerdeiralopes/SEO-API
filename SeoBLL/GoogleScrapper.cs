@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -19,10 +20,15 @@ namespace SeoBLL
             doc.LoadHtml(html);
 
             //divs that identify the pages cards
+            //these values might change
             var selectNodes = doc.DocumentNode.SelectNodes("//div[@class='ZINbbc xpd O9g5cc uUPGi']/div[@class='kCrYT']/a[1]");
             List<int> positions = new List<int>();
 
-            for(var i = 0; i < selectNodes.Count; i++)
+
+            //decode url
+            url = WebUtility.UrlDecode(url);
+
+            for (var i = 0; i < selectNodes.Count; i++)
             {
                 //search for the href attributes and comparing to the given url
                 if (selectNodes[i].GetAttributeValue("href", string.Empty).Contains(url))

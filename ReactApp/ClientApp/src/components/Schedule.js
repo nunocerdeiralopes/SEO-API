@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import LineChart from './Graph';
 import AlertDismissable from './Alert';
 
-export class History extends Component {
+export class Schedule extends Component {
     static displayName = History.name;
 
     constructor(props) {
@@ -152,7 +152,7 @@ export class History extends Component {
                     <tr>
                         <th>Query</th>
                         <th>Url</th>
-                        <th>Country Domain</th>
+                        <th>Google Domain</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -205,7 +205,7 @@ export class History extends Component {
                         <input type="text" className="form-control" id="inputUrlScheduleID" name="inputUrlSchedule" value={this.state.inputUrlSchedule} onChange={this.handleInputChange} required />
                     </div>
                     <div className="form-group col-md-4">
-                        <label htmlFor="inputCountryDomainScheduleID">Country Domain</label>
+                        <label htmlFor="inputCountryDomainScheduleID">Google Domain</label>
                         <select id="inputCountryDomainScheduleID" name="inputCountryDomainSchedule" value={this.state.inputCountryDomainSchedule} className="form-control" onChange={this.handleInputChange} required>
                             <option value="co.uk">co.uk</option>
                             <option value="com">com</option>
