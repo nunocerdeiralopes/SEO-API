@@ -21,7 +21,7 @@ namespace SEO_API.Controllers
         [HttpGet("{query}/{url}/{countryCode}")]
         public async Task<ActionResult<List<int>>> Get(string query, string url, string countryCode)
         {
-            if (!UrlHelper.isValidUrl(url) && !UrlHelper.isValidCountryCode(countryCode))
+            if (!UrlHelper.isValidUrl(url) || !UrlHelper.isValidCountryCode(countryCode))
                 return BadRequest();
 
             var results = await GoogleScrapper.GoogleResultsScrapper(query, url, countryCode, _appSettings.NumberOfResults);

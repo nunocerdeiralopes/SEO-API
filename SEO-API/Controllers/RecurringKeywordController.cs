@@ -91,7 +91,7 @@ namespace SEO_API.Controllers
         [HttpPost]
         public async Task<ActionResult<RecurringKeyword>> PostRecurringKeyword(RecurringKeyword recurringKeyword)
         {
-            if (!UrlHelper.isValidUrl(recurringKeyword.Url) && !UrlHelper.isValidCountryCode(recurringKeyword.CountryDomain))
+            if (!UrlHelper.isValidUrl(recurringKeyword.Url) || !UrlHelper.isValidCountryCode(recurringKeyword.CountryDomain))
                 return BadRequest();
 
             if (!NewRecurringKeywordExistsAlready(recurringKeyword))

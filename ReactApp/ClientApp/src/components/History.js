@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import LineChart from './Graph';
+import AlertDismissable from './Alert';
 
 export class History extends Component {
     static displayName = History.name;
@@ -13,7 +14,9 @@ export class History extends Component {
             loading: true,
             scheduleItems: [],
             showGraph: false,
-            GraphKeyword: null
+            GraphKeyword: null,
+            showAlert: false,
+            alert: null
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -51,7 +54,26 @@ export class History extends Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             }
-        });
+        })
+            .then(dataFetched => {
+                this.setState({
+                    showAlert: true,
+                    alert: {
+                        message: "Keyword deleted.",
+                        type: "success",
+                    }
+                });
+            })
+            .catch(error => {
+                console.log(error);
+                this.setState({
+                    showAlert: true,
+                    alert: {
+                        message: "Bad request.",
+                        type: "danger",
+                    }
+                });
+            });
 
         this.setState({ loading: true });
         this.fetchRecurringKeywords();
@@ -85,7 +107,26 @@ export class History extends Component {
                 Url: this.state.inputUrlSchedule,
                 CountryDomain: this.state.inputCountryDomainSchedule
             })
-        });
+        })
+            .then(dataFetched => {
+                this.setState({
+                    showAlert: true,
+                    alert: {
+                        message: "Keyword added.",
+                        type: "success",
+                    }
+                });
+            })
+            .catch(error => {
+                console.log(error);
+                this.setState({
+                    showAlert: true,
+                    alert: {
+                        message: "Bad request.",
+                        type: "danger",
+                    }
+                });
+            });
 
         const data = await response.json();
 
@@ -145,35 +186,41 @@ export class History extends Component {
             graph = <LineChart GraphKeyword={this.state.GraphKeyword} />;
         }
 
+        let alert;
+        if (this.state.showAlert) {
+            alert = <AlertDismissable type={this.state.alert.type} message={this.state.alert.message} />;
+        }
+
         return (
             <div>
-                <form onSubmit={this.handleSubmit}>
-                    <div className="form-row">
-                        <div className="form-group col-md-3">
-                            <label htmlFor="inputQueryScheduleID">Query</label>
-                            <input type="text" className="form-control" id="inputQueryScheduleID" name="inputQuerySchedule" value={this.state.inputQuerySchedule} onChange={this.handleInputChange} required />
-                        </div>
-                        <div className="form-group col-md-5">
-                            <label htmlFor="inputUrlScheduleID">Url</label>
-                            <input type="text" className="form-control" id="inputUrlScheduleID" name="inputUrlSchedule" value={this.state.inputUrlSchedule} onChange={this.handleInputChange} required />
-                        </div>
-                        <div className="form-group col-md-4">
-                            <label htmlFor="inputCountryDomainScheduleID">Country Domain</label>
-                            <select id="inputCountryDomainScheduleID" name="inputCountryDomainSchedule" value={this.state.inputCountryDomainSchedule} className="form-control" onChange={this.handleInputChange} required>
-                                <option value="co.uk">co.uk</option>
-                                <option value="com">com</option>
-                                <option value="co.au">co.au</option>
-                            </select>
-                        </div>
+            {alert}
+            <form onSubmit={this.handleSubmit}>
+                <div className="form-row">
+                    <div className="form-group col-md-3">
+                        <label htmlFor="inputQueryScheduleID">Query</label>
+                        <input type="text" className="form-control" id="inputQueryScheduleID" name="inputQuerySchedule" value={this.state.inputQuerySchedule} onChange={this.handleInputChange} required />
                     </div>
-                    <div className="form-group row">
-                        <div className="col-sm-10">
-                            <button type="submit" className="btn btn-primary">Schedule daily check</button>
-                        </div>
+                    <div className="form-group col-md-5">
+                        <label htmlFor="inputUrlScheduleID">Url</label>
+                        <input type="text" className="form-control" id="inputUrlScheduleID" name="inputUrlSchedule" value={this.state.inputUrlSchedule} onChange={this.handleInputChange} required />
                     </div>
-                </form>
-                {contents}
-                {graph}
+                    <div className="form-group col-md-4">
+                        <label htmlFor="inputCountryDomainScheduleID">Country Domain</label>
+                        <select id="inputCountryDomainScheduleID" name="inputCountryDomainSchedule" value={this.state.inputCountryDomainSchedule} className="form-control" onChange={this.handleInputChange} required>
+                            <option value="co.uk">co.uk</option>
+                            <option value="com">com</option>
+                            <option value="co.au">co.au</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="form-group row">
+                    <div className="col-sm-10">
+                        <button type="submit" className="btn btn-primary">Schedule daily check</button>
+                    </div>
+                </div>
+            </form>
+            {contents}
+            {graph}
             </div>
         );
     }
