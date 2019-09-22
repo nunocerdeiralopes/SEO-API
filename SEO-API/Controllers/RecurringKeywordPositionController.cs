@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,16 +29,31 @@ namespace SEO_API.Controllers
 
         // GET: api/RecurringKeywordPosition/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<RecurringKeywordPosition>> GetRecurringKeywordPosition(int id)
+        public async Task<ActionResult<GraphData>> GetRecurringKeywordPosition(int id)
         {
-            var recurringKeywordPosition = await _context.RecurringKeywordPosition.FindAsync(id);
+            var recurringKeyword = await _context.RecurringKeyword.FindAsync(id);
 
-            if (recurringKeywordPosition == null)
+            if (recurringKeyword == null)
             {
                 return NotFound();
             }
 
-            return recurringKeywordPosition;
+            GraphData data = new GraphData
+            {
+               X =  _context.RecurringKeywordPosition.Where(x => x.RecurringKeyworId == id)
+                            .OrderByDescending(x=>x.RecurringKeywordPositionId)
+                            .Take(7)
+                            .Select(x => x.Date.ToString("dd/MM/yyyy"))
+                            .ToList(),
+               Y =  _context.RecurringKeywordPosition
+                            .Where(x => x.RecurringKeyworId == id)
+                            .OrderByDescending(x => x.RecurringKeywordPositionId)
+                            .Take(7)
+                            .Select(x => Convert.ToInt32(x.Positions.Split(',', StringSplitOptions.None)[0]))
+                            .ToList()
+            };
+
+            return data;
         }
     }
 }

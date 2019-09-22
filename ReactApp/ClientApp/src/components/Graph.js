@@ -4,62 +4,54 @@ import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 
 class LineChart extends Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      // To avoid unnecessary update keep all options in the state.
-      chartOptions: {
-        xAxis: {
-          categories: ['A', 'B', 'C'],
-        },
-        series: [
-          { data: [1, 2, 3] }
-        ],
-        plotOptions: {
-          series: {
-            point: {
-              events: {
-                mouseOver: this.setHoverData.bind(this)
-              }
-            }
-          }
-        }
-      },
-      hoverData: null
-    };
-  }
+        this.state = {
+            chartOptions: null,
+            GraphKeyword: this.props.GraphKeyword,
+            isFetching: true
+        };
+    }
 
-  setHoverData = (e) => {
-    // The chart is not updated because `chartOptions` has not changed.
-    this.setState({ hoverData: e.target.category })
-  }
+    async componentDidMount() {
+        await fetch('https://localhost:5001/api/RecurringKeywordPosition/' + this.state.GraphKeyword.RecurringKeywordId)
+            .then(response => response.json())
+            .then(dataFetched => {
+                this.setState({
+                    chartOptions: {
+                        title: {
+                            text: 'Evolution for the keyword ' + this.state.GraphKeyword.Query + ' with Url ' + this.state.GraphKeyword.Url + ' at google.' + this.state.GraphKeyword.CountryDomain
+                        },
+                        xAxis: {
+                            categories: dataFetched.x,
+                        },
+                        series: [
+                            {
+                                name: 'Keyword evolution',
+                                data: dataFetched.y
+                            }
+                        ]
+                    },
+                    isFetching: false
+                });
+            });
 
-  updateSeries = () => {
-    // The chart is updated only with new options.
-    this.setState({
-      chartOptions: {
-        series: [
-          { data: [Math.random() * 5, 2, 1]}
-        ]
-      }
-    });
-  }
+    }
 
-  render() {
-    const { chartOptions, hoverData } = this.state;
+    render() {
+        if (this.state.isFetching) return null;
+        const { chartOptions } = this.state;
 
-    return (
-      <div>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={chartOptions}
-        />
-      <h3>Hovering over {hoverData}</h3>
-      <button onClick={this.updateSeries.bind(this)}>Update Series</button>
-      </div>
-    )
-  }
+        return (
+            <div className="card">
+                <HighchartsReact
+                    highcharts={Highcharts}
+                    options={chartOptions}
+                />
+            </div>
+        )
+    }
 }
 
 export default LineChart;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -90,7 +91,7 @@ namespace SEO_API.Controllers
         [HttpPost]
         public async Task<ActionResult<RecurringKeyword>> PostRecurringKeyword(RecurringKeyword recurringKeyword)
         {
-            if (!UrlHelper.isValidUrl(recurringKeyword.Url))
+            if (!UrlHelper.isValidUrl(recurringKeyword.Url) && !UrlHelper.isValidCountryCode(recurringKeyword.CountryDomain))
                 return BadRequest();
 
             if (!NewRecurringKeywordExistsAlready(recurringKeyword))
@@ -103,6 +104,19 @@ namespace SEO_API.Controllers
                 RecurringJob.AddOrUpdate("RecurringKeyword-" + recurringKeyword.RecurringKeyworId, 
                                         () => scrappingInstance.GoogleScrappingJob(recurringKeyword.Query, recurringKeyword.Url, recurringKeyword.CountryDomain, recurringKeyword.RecurringKeyworId), 
                                         Cron.Daily);
+
+                //create fake data do show on graph
+                for (int i = 0; i < 7; i++)
+                {
+                    Random random = new Random();
+                    _context.RecurringKeywordPosition.Add(new RecurringKeywordPosition
+                    {
+                        RecurringKeyworId = recurringKeyword.RecurringKeyworId,
+                        Date = DateTime.Today.AddDays(-i-1),
+                        Positions = Convert.ToInt32((random.NextDouble() * (10 - 1) + 1)).ToString()
+                    });
+                }
+                await _context.SaveChangesAsync();
 
                 return CreatedAtAction("GetRecurringKeyword", new { id = recurringKeyword.RecurringKeyworId }, recurringKeyword);
             }

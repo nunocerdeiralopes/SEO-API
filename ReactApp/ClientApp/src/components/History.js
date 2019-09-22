@@ -11,7 +11,9 @@ export class History extends Component {
             inputUrlSchedule: '',
             inputCountryDomainSchedule: 'co.uk',
             loading: true,
-            scheduleItems: []
+            scheduleItems: [],
+            showGraph: false,
+            GraphKeyword: null
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -41,9 +43,9 @@ export class History extends Component {
         });
     }
 
-    async handleDelete(e) {
+    async handleDelete(e, id) {
         e.preventDefault();
-        const response = await fetch('https://localhost:5001/api/RecurringKeyword/' + e.currentTarget.id, {
+        const response = await fetch('https://localhost:5001/api/RecurringKeyword/' + id, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -53,6 +55,19 @@ export class History extends Component {
 
         this.setState({ loading: true });
         this.fetchRecurringKeywords();
+    }
+
+    async handleGraph(e, id, query, url, countryDomain) {
+        e.preventDefault();
+        this.setState({
+            showGraph: true,
+            GraphKeyword: {
+                RecurringKeywordId: id,
+                Url: url,
+                Query: query,
+                CountryDomain: countryDomain
+            }
+        });
     }
 
     async handleSubmit(event) {
@@ -107,7 +122,7 @@ export class History extends Component {
                                 <td>{item.query}</td>
                                 <td>{item.url}</td>
                                 <td>{item.countryDomain}</td>
-                                <td><button type="submit" className="btn btn-sm btn-primary">Weekly Evolution</button>
+                                <td><button type="submit" className="btn btn-sm btn-primary" onClick={(e) => this.handleGraph(e, item.recurringKeyworId, item.query, item.url, item.countryDomain)}>Weekly Evolution</button>
                                     <button id={item.recurringKeyworId} type="button" className="close" aria-label="Close" onClick={(e) => this.handleDelete(e, item.recurringKeyworId)}>
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -124,6 +139,11 @@ export class History extends Component {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
             : this.renderScheduleTable(this.state.scheduleItems);
+
+        let graph;
+        if (this.state.showGraph) {
+            graph = <LineChart GraphKeyword={this.state.GraphKeyword} />;
+        }
 
         return (
             <div>
@@ -153,7 +173,7 @@ export class History extends Component {
                     </div>
                 </form>
                 {contents}
-                <LineChart />
+                {graph}
             </div>
         );
     }
